@@ -1,0 +1,432 @@
+# Active Directory Delegation of Control (TryHackMe AD Basics)
+
+---
+
+## Objective
+
+Understand how **Delegation of Control** works in Active Directory.
+
+Instead of making a user a **Domain Admin**, we can grant them specific administrative permissions.
+
+This follows the principle of:
+
+```text
+Least Privilege
+```
+
+Meaning:
+
+> Give users only the permissions necessary to perform their job.
+
+---
+
+## Learning Outcomes
+
+By the end of this exercise:
+
+- Understand Delegation
+- Understand Least Privilege
+- Reset a user's password without Domain Admin privileges
+- Use PowerShell to perform delegated administrative tasks
+
+---
+
+## Concept Review
+
+### Domain Admin
+
+```text
+Full control over the domain
+```
+
+Can:
+
+- Manage users
+- Manage computers
+- Reset passwords
+- Configure Active Directory
+- Administer Domain Controllers
+
+---
+
+### Delegation
+
+```text
+Granting a user a specific administrative task
+without making them a Domain Admin.
+```
+
+Example:
+
+```text
+Phillip
+↓
+Can reset Sophie's password
+↓
+Cannot administer the whole domain
+```
+
+---
+
+## OU vs Security Group vs Delegation
+
+### OU
+
+```text
+Policies
+```
+
+Examples:
+
+- Desktop settings
+- Password policies
+- Security policies
+
+---
+
+### Security Group
+
+```text
+Permissions
+```
+
+Examples:
+
+- Shared folders
+- Printers
+- Applications
+
+---
+
+### Delegation
+
+```text
+Administrative Tasks
+```
+
+Examples:
+
+- Reset passwords
+- Unlock accounts
+- Manage users
+
+---
+
+# Delegating Password Reset Rights
+
+### Navigate to
+
+```text
+Active Directory Users and Computers
+```
+
+Right-click the target OU:
+
+```text
+Sales
+→ Delegate Control
+```
+
+---
+
+### Step 1 - Delegate Control
+
+IMAGE1
+
+Select:
+
+```text
+Delegate Control...
+```
+
+---
+
+### Step 2 - Add Phillip
+
+IMAGE2
+
+Add:
+
+```text
+Phillip
+```
+
+Click:
+
+```text
+Check Names
+```
+
+Then:
+
+```text
+OK
+```
+
+---
+
+### Step 3 - Delegate Password Reset
+
+IMAGE3
+
+Select:
+
+```text
+Reset user passwords and force password change at next logon
+```
+
+Proceed through the wizard.
+
+---
+
+# Logging in as Phillip
+
+Use RDP credentials:
+
+```text
+Username: THM\phillip
+Password: Claire2008
+```
+
+---
+
+# Reset Sophie's Password
+
+Open PowerShell as Phillip.
+
+### Command
+
+```powershell
+Set-ADAccountPassword sophie -Reset -NewPassword (Read-Host -AsSecureString -Prompt 'New Password') -Verbose
+```
+
+Example password:
+
+```text
+ChangeMeNow@2023
+```
+
+---
+
+# Force Password Change At Next Logon
+
+```powershell
+Set-ADUser -ChangePasswordAtLogon $true -Identity sophie -Verbose
+```
+
+---
+
+# Lab Issues Encountered
+
+## Issue 1 - Invalid Credentials
+
+### Error
+
+```text
+The logon attempt failed.
+```
+
+### Observed While Attempting
+
+```text
+THM\sophie
+```
+
+### Possible Causes
+
+- Incorrect password entry
+- Password not reset successfully
+- Password complexity issues
+
+---
+
+## Issue 2 - RDP Session Limit
+
+### Error
+
+```text
+The number of connections to this computer is limited
+and all connections are in use right now.
+```
+
+### Observations
+
+- Authentication may have succeeded
+- System rejected connection due to session limits
+- Different from a password failure
+
+---
+
+## Issue 3 - RunAs Failure
+
+### Attempt
+
+```powershell
+runas /user:THM\phillip powershell
+```
+
+### Error
+
+```text
+1385: Logon failure:
+the user has not been granted the requested logon type.
+```
+
+### Explanation
+
+```text
+Phillip is not permitted
+to perform interactive RunAs logons.
+```
+
+---
+
+# Troubleshooting Password Resets
+
+## Password Reset Repeatedly Failed
+
+### Commands Tested
+
+```powershell
+Set-ADAccountPassword -Identity sophie -Reset -NewPassword (
+    ConvertTo-SecureString 'Sophie2022!' -AsPlainText -Force
+)
+```
+
+```powershell
+Set-ADAccountPassword -Identity sophie -Reset -NewPassword (
+    ConvertTo-SecureString 'sophieELLI00!' -AsPlainText -Force
+)
+```
+
+```powershell
+Set-ADAccountPassword -Identity sophie -Reset -NewPassword (
+    ConvertTo-SecureString 'ChangeMeNow@2023' -AsPlainText -Force
+)
+```
+
+---
+
+### Error Received
+
+```text
+Set-ADAccountPassword : The password does not meet
+the length, complexity, or history requirement
+of the domain.
+
+ADPasswordComplexityException
+```
+
+---
+
+### Initial Assumption
+
+```text
+Password not complex enough
+```
+
+---
+
+### Passwords Already Met Complexity Rules
+
+✅ Uppercase letters
+
+✅ Lowercase letters
+
+✅ Numbers
+
+✅ Special characters
+
+✅ Sufficient length
+
+Examples:
+
+```text
+ChangeMeNow@2023
+ComplexPassword!456
+Sophie00!@0099
+```
+
+---
+
+### Revised Understanding
+
+Possible causes:
+
+```text
+Password History Restriction
+```
+
+or
+
+```text
+Additional Domain Password Policies
+```
+
+The domain may prevent reuse of previously used passwords.
+
+---
+
+### Important Lesson Learned
+
+When Active Directory returns:
+
+```text
+ADPasswordComplexityException
+```
+
+it does **not always mean password complexity**.
+
+It may also indicate:
+
+- Password history violation
+- Password policy violation
+- Domain-specific restrictions
+
+---
+
+# Key Takeaways
+
+```text
+OU
+→ Policies
+
+Security Group
+→ Resource Access
+
+Delegation
+→ Administrative Tasks
+
+Domain Admin
+→ Full Control
+
+Least Privilege
+→ Minimum permissions required
+```
+
+---
+
+# Personal Notes
+
+The hardest part of this lab was not Active Directory itself.
+
+The largest challenge was understanding the authentication flow and RDP session behavior.
+
+Despite the issues encountered, the main lesson was successfully understood:
+
+```text
+Delegation allows a user
+to perform a specific administrative task
+without becoming a Domain Admin.
+```
+
+---
+
+# Frustration Level
+
+```text
+████████████████████████████
+100%
+```
+
+> "Complexity errors don't always mean complexity problems."

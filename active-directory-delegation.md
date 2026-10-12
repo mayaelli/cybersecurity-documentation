@@ -432,8 +432,7 @@ without becoming a Domain Admin.
 # Frustration Level
 
 ```text
-████████████████████████████
-100%
+████████████████████████████ 100%
 ```
 
 > "Complexity errors don't always mean complexity problems."

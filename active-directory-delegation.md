@@ -131,7 +131,8 @@ Sales
 
 ### Step 1 - Delegate Control
 
-IMAGE1
+<img width="311" height="372" alt="image" src="https://github.com/user-attachments/assets/3cf7e413-2308-4a80-bd8c-7a070fe4b0e9" />
+
 
 Select:
 
@@ -143,7 +144,8 @@ Delegate Control...
 
 ### Step 2 - Add Phillip
 
-IMAGE2
+<img width="583" height="570" alt="image" src="https://github.com/user-attachments/assets/be38ca4d-3cd1-4f38-be1f-c2452987f543" />
+
 
 Add:
 
@@ -167,7 +169,8 @@ OK
 
 ### Step 3 - Delegate Password Reset
 
-IMAGE3
+<img width="531" height="414" alt="image" src="https://github.com/user-attachments/assets/a4fd2c21-4ae1-4b52-8ec3-48b476aec6f9" />
+
 
 Select:
 
@@ -219,6 +222,10 @@ Set-ADUser -ChangePasswordAtLogon $true -Identity sophie -Verbose
 # Lab Issues Encountered
 
 ## Issue 1 - Invalid Credentials
+
+<img width="1917" height="1082" alt="image" src="https://github.com/user-attachments/assets/43031b5c-6363-4c5f-aaea-e6b047aa05bb" />
+<img width="1917" height="982" alt="image" src="https://github.com/user-attachments/assets/89a807bc-8d08-4d93-9344-0e7996dfbbab" />
+
 
 ### Error
 

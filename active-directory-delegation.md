@@ -436,3 +436,195 @@ without becoming a Domain Admin.
 ```
 
 > "Complexity errors don't always mean complexity problems."
+
+# GPO (Group Policy Objects)
+## Core Concept
+```
+OU = WHO gets the rule
+GPO = THE rule itself
+```
+```
+Examples
+Marketing OU
+↓
+GPO: No Control Panel
+↓
+Marketing users cannot access Control Panel
+
+Domain
+↓
+GPO: Auto Lock Screen (5 min)
+↓
+Applies to all computers
+Key Terms
+Plain Text
+GPO
+→ Collection of policies/settings
+```
+```
+OU
+→ Target audience
+ 
+Security Filtering
+→ Apply GPO only to selected users/computers
+ 
+SYSVOL
+→ Network share storing/distributing GPOs
+ 
+gpupdate /force
+→ Refresh policies immediately
+Relationships
+Plain Text
+OU
+→ Who
+ 
+GPO
+→ Rule
+ 
+Security Group
+→ Access
+ 
+Delegation
+→ Admin task
+Cheat Code
+Plain Text
+Create GPO
+↓
+Link GPO to OU
+↓
+Policy applies
+```
+
+# Authentication Methods (AD)
+## Kerberos
+```
+Modern
+Default
+Ticket-based authentication
+```
+
+Think:
+```
+Theme Park Ticket 🎟️
+Kerberos Flow
+```
+
+Login
+↓
+Get TGT
+↓
+Use TGT to get TGS
+↓
+Access service
+Key Terms
+Plain Text
+TGT
+(Ticket Granting Ticket)
+→ Ticket that gets more tickets
+ 
+TGS
+(Ticket Granting Service)
+→ Ticket for a specific service
+ 
+KDC
+(Key Distribution Center)
+→ Issues Kerberos tickets
+Easy Memory
+```
+TGT
+→ Ticket to get tickets
+ 
+TGS
+→ Ticket to access service
+NetNTLM
+```
+Legacy
+Challenge-Response authentication
+
+Think:
+
+Server:
+Prove who you are.
+ 
+Client:
+Challenge response.
+ 
+DC:
+Checks answer.
+Flow
+```
+Challenge
+↓
+Response
+↓
+Verification
+↓
+Access
+Important
+
+```
+Password is NEVER sent over the network
+```
+Kerberos vs NetNTLM
+
+Kerberos
+→ Tickets
+→ Modern
+→ Default
+ 
+NetNTLM
+→ Challenge/Response
+→ Legacy
+→ Compatibility
+Exam Triggers
+
+Default authentication?
+→ Kerberos
+ 
+Ticket for more tickets?
+→ TGT
+ 
+Ticket for service access?
+→ TGS
+ 
+Password sent in NetNTLM?
+→ No
+ 
+GPO stored/distributed by?
+→ SYSVOL
+ 
+Force GPO refresh?
+→ gpupdate /force
+
+## Ultimate AD Cheat Sheet
+```
+OU
+→ Who gets the policy
+ 
+GPO
+→ Policy
+ 
+Security Group
+→ Resource Access
+ 
+Delegation
+→ Admin Tasks
+ 
+Domain Admin
+→ Full Control
+ 
+Least Privilege
+→ Minimum permissions
+ 
+Kerberos
+→ Tickets
+ 
+NetNTLM
+→ Challenge/Response
+ 
+SYSVOL
+→ GPO Share
+ 
+gpupdate /force
+→ Refresh GPOs
+```

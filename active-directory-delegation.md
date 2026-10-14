@@ -552,7 +552,7 @@ Challenge response.
 DC:
 Checks answer.
 Flow
-```
+
 Challenge
 ↓
 Response
@@ -565,8 +565,8 @@ Important
 ```
 Password is NEVER sent over the network
 ```
-Kerberos vs NetNTLM
-
+# Kerberos vs NetNTLM
+```
 Kerberos
 → Tickets
 → Modern
@@ -595,36 +595,63 @@ GPO stored/distributed by?
  
 Force GPO refresh?
 → gpupdate /force
+```
 
 ## Ultimate AD Cheat Sheet
 ```
 OU
-→ Who gets the policy
- 
+→ Who gets the policy 
 GPO
-→ Policy
- 
+→ Policy 
 Security Group
 → Resource Access
- 
 Delegation
-→ Admin Tasks
- 
+→ Admin Tasks 
 Domain Admin
 → Full Control
- 
 Least Privilege
 → Minimum permissions
- 
 Kerberos
 → Tickets
- 
 NetNTLM
 → Challenge/Response
- 
 SYSVOL
 → GPO Share
- 
 gpupdate /force
 → Refresh GPOs
+```
+
+# Trees, Forests, and Trust
+```
+Tree
+→ Multiple domains
+→ Same namespace
+
+Example:
+thm.local
+uk.thm.local
+us.thm.local
+
+Forest
+→ Multiple trees
+→ Different namespaces
+
+Example:
+thm.local
+mht.local
+
+Trust Relationship
+→ Allows cross-domain access
+
+One-Way Trust
+→ Domain B users access Domain A resources
+
+Two-Way Trust
+→ Both domains trust each other
+
+Domain Admin
+→ One domain
+
+Enterprise Admin
+→ Entire forest
 ```
